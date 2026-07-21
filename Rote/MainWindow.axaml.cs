@@ -20,6 +20,12 @@ public partial class MainWindow : Window
     private bool _isDragging;
     private PixelPoint _posBeforeDrag; // to detect click vs drag
 
+    // ── Resize tracking ──────────────────────────────────────────
+    private bool _isResizing;
+    private Point _resizeStartPoint;
+    private double _resizeStartWidth;
+    private double _resizeStartHeight;
+
     // ── Auto-save ─────────────────────────────────────────────────
     private DispatcherTimer? _saveTimer;
 
@@ -42,6 +48,11 @@ public partial class MainWindow : Window
         HandleBorder.PointerPressed  += OnHandlePressed;
         HandleBorder.PointerMoved    += OnHandleMoved;
         HandleBorder.PointerReleased += OnHandleReleased;
+
+        // ── Resize handle ──
+        ResizeHandle.PointerPressed  += OnResizePressed;
+        ResizeHandle.PointerMoved    += OnResizeMoved;
+        ResizeHandle.PointerReleased += OnResizeReleased;
 
         // ── Context menu ──
         // Build a SEPARATE instance for each target (review F3): sharing one
@@ -91,8 +102,9 @@ public partial class MainWindow : Window
 
     private void ApplySize()
     {
-        Width  = _state.IsExpanded ? AppConstants.ExpandedWidth  : AppConstants.CollapsedSize;
-        Height = _state.IsExpanded ? AppConstants.ExpandedHeight : AppConstants.CollapsedSize;
+        Width  = _state.IsExpanded ? _state.ExpandedWidth  : AppConstants.CollapsedSize;
+        Height = _state.IsExpanded ? _state.ExpandedHeight : AppConstants.CollapsedSize;
+        Opacity = _state.Opacity;
     }
 
     private void ToggleExpand()
@@ -153,6 +165,41 @@ public partial class MainWindow : Window
             ToggleExpand();
             e.Handled = true;
         }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  Resize (bottom-right handle)
+    // ═══════════════════════════════════════════════════════════════
+
+    private void OnResizePressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!_state.IsExpanded) return;
+        _isResizing = true;
+        _resizeStartPoint = e.GetPosition(this);
+        _resizeStartWidth = Width;
+        _resizeStartHeight = Height;
+        ResizeHandle.CapturePointer(e.Pointer);
+        e.Handled = true;
+    }
+
+    private void OnResizeMoved(object? sender, PointerEventArgs e)
+    {
+        if (!_isResizing) return;
+        var current = e.GetPosition(this);
+        var dx = current.X - _resizeStartPoint.X;
+        var dy = current.Y - _resizeStartPoint.Y;
+        Width = Math.Max(AppConstants.MinExpandedWidth, _resizeStartWidth + dx);
+        Height = Math.Max(AppConstants.MinExpandedHeight, _resizeStartHeight + dy);
+    }
+
+    private void OnResizeReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (!_isResizing) return;
+        _isResizing = false;
+        ResizeHandle.ReleasePointerCapture(e.Pointer);
+        _state.ExpandedWidth = Width;
+        _state.ExpandedHeight = Height;
+        SaveNow();
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -291,12 +338,39 @@ public partial class MainWindow : Window
             SaveNow();
         };
         menu.Items.Add(topmostItem);
+
+        // ── Opacity submenu ──
+        var opacityMenu = new MenuItem { Header = "透明度" };
+        var opacityLevels = new[] { 1.0, 0.9, 0.8, 0.7, 0.6, 0.5 };
+        foreach (var level in opacityLevels)
+        {
+            var item = new MenuItem { Header = $"{level * 100}%", Tag = level };
+            item.Click += (_, _) =>
+            {
+                _state.Opacity = level;
+                Opacity = level;
+                SaveNow();
+            };
+            opacityMenu.Items.Add(item);
+        }
+        menu.Items.Add(opacityMenu);
         menu.Items.Add(new Separator());
 
         // ── Reset position ──
         var resetPos = new MenuItem { Header = "重置窗口位置" };
         resetPos.Click += (_, _) => ResetWindowPosition();
         menu.Items.Add(resetPos);
+
+        // ── Reset size ──
+        var resetSize = new MenuItem { Header = "重置窗口大小" };
+        resetSize.Click += (_, _) =>
+        {
+            _state.ExpandedWidth = 320;
+            _state.ExpandedHeight = 360;
+            ApplySize();
+            SaveNow();
+        };
+        menu.Items.Add(resetSize);
 
         // ── Clear content ──
         var clear = new MenuItem { Header = "清空内容" };

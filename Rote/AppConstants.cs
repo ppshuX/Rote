@@ -10,6 +10,8 @@ internal static class AppConstants
 {
     // ── Window sizing (logical pixels) ──
     public const double CollapsedSize  = 36;
+    public const double MinExpandedWidth  = 200;
+    public const double MinExpandedHeight = 150;
     public const double ExpandedWidth  = 320;
     public const double ExpandedHeight = 360;
 

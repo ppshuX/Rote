@@ -18,6 +18,15 @@ public class AppState
     [JsonPropertyName("isTopmost")]
     public bool IsTopmost { get; set; } = true;
 
+    [JsonPropertyName("opacity")]
+    public double Opacity { get; set; } = 1.0;
+
+    [JsonPropertyName("expandedWidth")]
+    public double ExpandedWidth { get; set; } = 320;
+
+    [JsonPropertyName("expandedHeight")]
+    public double ExpandedHeight { get; set; } = 360;
+
     [JsonPropertyName("windowX")]
     public double WindowX { get; set; }
 
@@ -36,6 +45,9 @@ public class AppState
             Content = string.Empty,
             IsExpanded = true,
             IsTopmost = true,
+            Opacity = 1.0,
+            ExpandedWidth = 320,
+            ExpandedHeight = 360,
             WindowX = AppConstants.DefaultPositionSentinel,
             WindowY = AppConstants.DefaultPositionSentinel,
         };

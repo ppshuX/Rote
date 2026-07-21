@@ -50,18 +50,33 @@
                 Margin="8,0,8,8"
                 ZIndex="1"
                 ClipToBounds="True">
-            <TextBox x:Name="NoteEditor"
-                     Watermark="随手写点什么……"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     FontSize="15"
-                     Foreground="White"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     Padding="16,12"
-                     VerticalAlignment="Stretch"
-                     HorizontalAlignment="Stretch"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            <Grid>
+                <TextBox x:Name="NoteEditor"
+                         Watermark="随手写点什么……"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         FontSize="15"
+                         Foreground="White"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="16,12"
+                         VerticalAlignment="Stretch"
+                         HorizontalAlignment="Stretch"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                <!-- Resize handle -->
+                <Border x:Name="ResizeHandle"
+                        Width="16" Height="16"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Cursor="SizeNWSE"
+                        Background="Transparent"
+                        ZIndex="2">
+                    <Path Data="M14,14 L14,6 M14,14 L6,14 M14,14 L10,10 M14,14 L14,10 M14,14 L10,14"
+                          Stroke="#60FFFFFF"
+                          StrokeThickness="1.5"
+                          Stretch="Uniform" />
+                </Border>
+            </Grid>
         </Border>
 
     </Grid>
