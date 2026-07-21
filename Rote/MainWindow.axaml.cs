@@ -79,6 +79,9 @@ public partial class MainWindow : Window
             UpdateVisualState();
         };
 
+        // ── Keyboard shortcuts ──
+        this.KeyDown += OnKeyDown;
+
         _initialized = true;
     }
 
@@ -137,6 +140,19 @@ public partial class MainWindow : Window
             ToggleExpand();
         }
         _isDragging = false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  Keyboard shortcuts
+    // ═══════════════════════════════════════════════════════════════
+
+    private void OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.Control)
+        {
+            ToggleExpand();
+            e.Handled = true;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════
