@@ -16,7 +16,8 @@ public partial class MainWindow : Window
     private AppState _state = null!;
     private bool _initialized;
 
-    // ── Drag tracking (OS-level BeginMoveDrag) ────────────────────
+    // ── Drag tracking (manual) ────────────────────────────────────
+    private bool _isDragging;
     private PixelPoint _posBeforeDrag; // to detect click vs drag
 
     // ── Auto-save ─────────────────────────────────────────────────
@@ -105,33 +106,37 @@ public partial class MainWindow : Window
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  Drag & click (OS-level BeginMoveDrag — perfect mouse sync)
+    //  Drag & click (manual implementation)
     // ═══════════════════════════════════════════════════════════════
 
     private void OnHandlePressed(object? sender, PointerPressedEventArgs e)
     {
         _posBeforeDrag = Position;
-        e.Handled      = true;
-
-        // OS-level window drag — blocks until mouse is released
-        BeginMoveDrag(e);
-
-        // After drag ends: if the window didn't move, it was a click
-        if (Math.Abs(Position.X - _posBeforeDrag.X) < AppConstants.ClickThreshold
-         && Math.Abs(Position.Y - _posBeforeDrag.Y) < AppConstants.ClickThreshold)
-        {
-            ToggleExpand();
-        }
+        _isDragging = false;
+        e.Handled = true;
+        HandleBorder.CapturePointer(e.Pointer);
     }
 
     private void OnHandleMoved(object? sender, PointerEventArgs e)
     {
-        // Not needed — BeginMoveDrag handles everything
+        if (!HandleBorder.IsPointerCaptured) return;
+
+        _isDragging = true;
+        var point = e.GetPosition(this);
+        var screenPoint = this.PointToScreen(point);
+        Position = new PixelPoint(screenPoint.X - (int)(AppConstants.CollapsedSize / 2),
+                                  screenPoint.Y - (int)(AppConstants.CollapsedSize / 2));
     }
 
     private void OnHandleReleased(object? sender, PointerReleasedEventArgs e)
     {
-        // Not needed — BeginMoveDrag returns on its own
+        HandleBorder.ReleasePointerCapture(e.Pointer);
+
+        if (!_isDragging)
+        {
+            ToggleExpand();
+        }
+        _isDragging = false;
     }
 
     // ═══════════════════════════════════════════════════════════════

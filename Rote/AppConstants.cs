@@ -9,7 +9,7 @@ namespace Rote;
 internal static class AppConstants
 {
     // ── Window sizing (logical pixels) ──
-    public const double CollapsedSize  = 56;
+    public const double CollapsedSize  = 36;
     public const double ExpandedWidth  = 320;
     public const double ExpandedHeight = 360;
 
@@ -19,7 +19,7 @@ internal static class AppConstants
 
     // ── Interaction thresholds ──
     /// <summary>Max pointer travel (px) still treated as a click, not a drag.</summary>
-    public const double ClickThreshold = 2;
+    public const double ClickThreshold = 5;
     /// <summary>Margin kept from screen edges / working-area bounds (px).</summary>
     public const int PositionMargin = 40;
 

@@ -15,8 +15,8 @@
         <!-- Handle — collapsed indicator + drag grip + expand/collapse trigger -->
         <Border x:Name="HandleBorder"
                 Grid.Row="0"
-                Width="56" Height="56"
-                CornerRadius="14"
+                Width="36" Height="36"
+                CornerRadius="10"
                 Background="#25FFFFFF"
                 BorderBrush="#30FFFFFF"
                 BorderThickness="1"
@@ -27,14 +27,14 @@
             <StackPanel Orientation="Vertical"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Spacing="4">
-                <Border Width="12" Height="2" CornerRadius="1"
+                        Spacing="3">
+                <Border Width="10" Height="1.5" CornerRadius="1"
                         Background="#60FFFFFF"
                         HorizontalAlignment="Center" />
-                <Border Width="12" Height="2" CornerRadius="1"
+                <Border Width="10" Height="1.5" CornerRadius="1"
                         Background="#60FFFFFF"
                         HorizontalAlignment="Center" />
-                <Border Width="12" Height="2" CornerRadius="1"
+                <Border Width="10" Height="1.5" CornerRadius="1"
                         Background="#60FFFFFF"
                         HorizontalAlignment="Center" />
             </StackPanel>
