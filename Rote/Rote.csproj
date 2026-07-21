@@ -9,9 +9,7 @@
     <ApplicationIcon>Assets\rote.ico</ApplicationIcon>
     <AssemblyName>Rote</AssemblyName>
     <RootNamespace>Rote</RootNamespace>
-    <TrimMode>full</TrimMode>
-    <PublishAot>true</PublishAot>
-    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
   </PropertyGroup>
 
   <ItemGroup>
