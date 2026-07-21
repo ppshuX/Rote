@@ -129,12 +129,12 @@ public partial class MainWindow : Window
         _posBeforeDrag = Position;
         _isDragging = false;
         e.Handled = true;
-        HandleBorder.CapturePointer(e.Pointer);
+        e.Pointer.Capture(HandleBorder);
     }
 
     private void OnHandleMoved(object? sender, PointerEventArgs e)
     {
-        if (!HandleBorder.IsPointerCaptured) return;
+        if (e.Pointer.Captured != HandleBorder) return;
 
         _isDragging = true;
         var point = e.GetPosition(this);
@@ -145,7 +145,7 @@ public partial class MainWindow : Window
 
     private void OnHandleReleased(object? sender, PointerReleasedEventArgs e)
     {
-        HandleBorder.ReleasePointerCapture(e.Pointer);
+        e.Pointer.Capture(null);
 
         if (!_isDragging)
         {
@@ -178,7 +178,7 @@ public partial class MainWindow : Window
         _resizeStartPoint = e.GetPosition(this);
         _resizeStartWidth = Width;
         _resizeStartHeight = Height;
-        ResizeHandle.CapturePointer(e.Pointer);
+        e.Pointer.Capture(ResizeHandle);
         e.Handled = true;
     }
 
@@ -196,7 +196,7 @@ public partial class MainWindow : Window
     {
         if (!_isResizing) return;
         _isResizing = false;
-        ResizeHandle.ReleasePointerCapture(e.Pointer);
+        e.Pointer.Capture(null);
         _state.ExpandedWidth = Width;
         _state.ExpandedHeight = Height;
         SaveNow();
@@ -234,9 +234,7 @@ public partial class MainWindow : Window
     private void OnWindowClosing(object? sender, WindowClosingEventArgs e)
     {
         SaveNow();
-        // Release the dispatcher timer so it cannot fire after the window is gone (review F19).
         _saveTimer?.Stop();
-        _saveTimer?.Dispose();
         _saveTimer = null;
     }
 
