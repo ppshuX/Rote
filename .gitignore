@@ -1,0 +1,25 @@
+# Build results
+bin/
+obj/
+publish/
+publish-single/
+publish-mac-arm64/
+publish-mac-x64/
+
+# Executables and binaries
+*.exe
+*.pdb
+*.dll
+
+# MiMoCode
+.mimocode/
+.workbuddy/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.vscode/
+*.user

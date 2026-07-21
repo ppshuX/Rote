@@ -1,0 +1,69 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Rote.MainWindow"
+        Title="Rote"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        CanResize="False"
+        WindowStartupLocation="Manual">
+
+    <Grid RowDefinitions="56,*" Background="Transparent">
+
+        <!-- Handle — collapsed indicator + drag grip + expand/collapse trigger -->
+        <Border x:Name="HandleBorder"
+                Grid.Row="0"
+                Width="56" Height="56"
+                CornerRadius="14"
+                Background="#25FFFFFF"
+                BorderBrush="#30FFFFFF"
+                BorderThickness="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Cursor="SizeAll"
+                ZIndex="10">
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="4">
+                <Border Width="12" Height="2" CornerRadius="1"
+                        Background="#60FFFFFF"
+                        HorizontalAlignment="Center" />
+                <Border Width="12" Height="2" CornerRadius="1"
+                        Background="#60FFFFFF"
+                        HorizontalAlignment="Center" />
+                <Border Width="12" Height="2" CornerRadius="1"
+                        Background="#60FFFFFF"
+                        HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <!-- Note — visible when expanded -->
+        <Border x:Name="NoteBorder"
+                Grid.Row="1"
+                CornerRadius="16"
+                Background="#10FFFFFF"
+                BorderBrush="#20FFFFFF"
+                BorderThickness="1"
+                Margin="8,0,8,8"
+                ZIndex="1"
+                ClipToBounds="True">
+            <TextBox x:Name="NoteEditor"
+                     Watermark="随手写点什么……"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     FontSize="15"
+                     Foreground="White"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="16,12"
+                     VerticalAlignment="Stretch"
+                     HorizontalAlignment="Stretch"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </Border>
+
+    </Grid>
+
+</Window>
