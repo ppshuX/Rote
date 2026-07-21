@@ -15,11 +15,13 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Publish Windows
         run: dotnet publish Rote -c Release -r win-x64 --self-contained true -o publish-win
+      - name: Zip Windows build
+        run: Compress-Archive -Path publish-win/* -DestinationPath Rote-win-x64.zip
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Rote-win-x64
-          path: publish-win/
+          path: Rote-win-x64.zip
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -30,11 +32,13 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Publish macOS ARM64
         run: dotnet publish Rote -c Release -r osx-arm64 --self-contained true -o publish-mac-arm64
+      - name: Zip macOS ARM64 build
+        run: zip -r Rote-macos-arm64.zip publish-mac-arm64/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Rote-macos-arm64
-          path: publish-mac-arm64/
+          path: Rote-macos-arm64.zip
 
   build-macos-x64:
     runs-on: macos-latest
@@ -45,11 +49,13 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Publish macOS x64
         run: dotnet publish Rote -c Release -r osx-x64 --self-contained true -o publish-mac-x64
+      - name: Zip macOS x64 build
+        run: zip -r Rote-macos-x64.zip publish-mac-x64/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: Rote-macos-x64
-          path: publish-mac-x64/
+          path: Rote-macos-x64.zip
 
   release:
     needs: [build-windows, build-macos-arm64, build-macos-x64]
@@ -62,7 +68,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            Rote-win-x64/Rote.exe
-            Rote-macos-arm64/Rote
-            Rote-macos-x64/Rote
+            Rote-win-x64/Rote-win-x64.zip
+            Rote-macos-arm64/Rote-macos-arm64.zip
+            Rote-macos-x64/Rote-macos-x64.zip
           generate_release_notes: true
