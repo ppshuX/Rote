@@ -14,9 +14,9 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Publish Windows
-        run: dotnet publish Rote -c Release -r win-x64 --self-contained true -o publish-win
+        run: dotnet publish Rote -c Release -r win-x64
       - name: Zip Windows build
-        run: Compress-Archive -Path publish-win/* -DestinationPath Rote-win-x64.zip
+        run: Compress-Archive -Path Rote/bin/Release/net9.0/win-x64/publish/* -DestinationPath Rote-win-x64.zip
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -31,9 +31,9 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Publish macOS ARM64
-        run: dotnet publish Rote -c Release -r osx-arm64 --self-contained true -o publish-mac-arm64
+        run: dotnet publish Rote -c Release -r osx-arm64
       - name: Zip macOS ARM64 build
-        run: zip -r Rote-macos-arm64.zip publish-mac-arm64/
+        run: zip -r Rote-macos-arm64.zip Rote/bin/Release/net9.0/osx-arm64/publish/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -48,9 +48,9 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Publish macOS x64
-        run: dotnet publish Rote -c Release -r osx-x64 --self-contained true -o publish-mac-x64
+        run: dotnet publish Rote -c Release -r osx-x64
       - name: Zip macOS x64 build
-        run: zip -r Rote-macos-x64.zip publish-mac-x64/
+        run: zip -r Rote-macos-x64.zip Rote/bin/Release/net9.0/osx-x64/publish/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
