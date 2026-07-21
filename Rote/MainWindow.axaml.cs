@@ -68,6 +68,9 @@ public partial class MainWindow : Window
                 ScheduleAutoSave();
         };
 
+        // ── Keyboard shortcuts (on NoteEditor, not Window) ──
+        NoteEditor.KeyDown += OnNoteKeyDown;
+
         // ── Save on window events ──
         this.Deactivated += (_, _) => SaveNow();
         this.Closing     += OnWindowClosing;
@@ -89,9 +92,6 @@ public partial class MainWindow : Window
             RestoreWindowPosition();
             UpdateVisualState();
         };
-
-        // ── Keyboard shortcuts ──
-        this.KeyDown += OnKeyDown;
 
         _initialized = true;
     }
@@ -158,7 +158,7 @@ public partial class MainWindow : Window
     //  Keyboard shortcuts
     // ═══════════════════════════════════════════════════════════════
 
-    private void OnKeyDown(object? sender, KeyEventArgs e)
+    private void OnNoteKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.Control)
         {
