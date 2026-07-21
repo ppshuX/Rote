@@ -1,0 +1,68 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Publish Windows
+        run: dotnet publish Rote -c Release -r win-x64 --self-contained true -o publish-win
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rote-win-x64
+          path: publish-win/
+
+  build-macos-arm64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Publish macOS ARM64
+        run: dotnet publish Rote -c Release -r osx-arm64 --self-contained true -o publish-mac-arm64
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rote-macos-arm64
+          path: publish-mac-arm64/
+
+  build-macos-x64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Publish macOS x64
+        run: dotnet publish Rote -c Release -r osx-x64 --self-contained true -o publish-mac-x64
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Rote-macos-x64
+          path: publish-mac-x64/
+
+  release:
+    needs: [build-windows, build-macos-arm64, build-macos-x64]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Rote-win-x64/Rote.exe
+            Rote-macos-arm64/Rote
+            Rote-macos-x64/Rote
+          generate_release_notes: true
